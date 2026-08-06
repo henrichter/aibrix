@@ -5,6 +5,11 @@ on:
   pull_request:
     paths:
       - 'dist/chart/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'dist/chart/**'
 
 jobs:
   build-images:
@@ -132,3 +137,32 @@ jobs:
           kubectl create namespace aibrix-system
           ct install --chart-dirs . --charts . --namespace aibrix-system \
             --helm-extra-args '--timeout 15m0s'
+
+  publish:
+    needs: [test]
+    # Publish only on push to the default branch or manual dispatch, never on PRs.
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.17.0
+
+      - name: Log in to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | \
+            helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Package chart
+        run: helm package dist/chart
+
+      - name: Push chart to GHCR
+        run: helm push aibrix-*.tgz oci://ghcr.io/${{ github.repository_owner }}/charts
+
