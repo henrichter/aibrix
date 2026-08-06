@@ -7,6 +7,10 @@
     "controllerManager": {
       "type": "object",
       "properties": {
+        "enable": {
+          "type": "boolean",
+          "description": "Gates the controller-manager workload (deployment, rbac, service)"
+        },
         "replicas": {
           "type": "integer",
           "minimum": 1,
@@ -102,6 +106,10 @@
     "gpuOptimizer": {
       "type": "object",
       "properties": {
+        "enable": {
+          "type": "boolean",
+          "description": "Gates the gpu-optimizer workload (deployment, rbac, service)"
+        },
         "replicaCount": {
           "type": "integer",
           "minimum": 1,
@@ -315,6 +323,10 @@
         "service": {
           "type": "object",
           "properties": {
+            "enable": {
+              "type": "boolean",
+              "description": "Gates the metadata-service workload (deployment, rbac, service); redis is gated separately by metadata.redis.enabled"
+            },
             "replicas": {
               "type": "integer",
               "minimum": 1

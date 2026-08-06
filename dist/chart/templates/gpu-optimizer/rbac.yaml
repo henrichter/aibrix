@@ -1,3 +1,4 @@
+{{- if .Values.gpuOptimizer.enable }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -35,3 +36,4 @@ roleRef:
   kind: ClusterRole
   name: {{ include "aibrix.fullname" . }}-gpu-optimizer
   apiGroup: rbac.authorization.k8s.io
+{{- end }}

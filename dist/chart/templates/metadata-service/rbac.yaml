@@ -1,3 +1,4 @@
+{{- if .Values.metadata.service.enable }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -46,3 +47,4 @@ subjects:
   - kind: ServiceAccount
     name: {{ include "aibrix.metadata.serviceAccountName" . }}
     namespace: {{ .Release.Namespace }}
+{{- end }}

@@ -6,6 +6,7 @@ global:
   imagePullSecrets: []
 
 controllerManager:
+  enable: true
   replicas: 1
   imagePullSecrets: []
   container:
@@ -125,6 +126,7 @@ gatewayPlugin:
   tolerations: []
 
 gpuOptimizer:
+  enable: true
   replicaCount: 1
   imagePullSecrets: []
   container:
@@ -259,6 +261,8 @@ metadata:
     annotations: {}
     name: ""
   service:
+    # redis is gated separately by metadata.redis.enabled
+    enable: true
     replicas: 1
     imagePullSecrets: []
     initContainer:

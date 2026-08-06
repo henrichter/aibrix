@@ -1,3 +1,4 @@
+{{- if .Values.metadata.service.enable }}
 {{- $redisHost := default (printf "%s-redis-master" (include "aibrix.fullname" .)) .Values.metadata.service.redis.host }}
 ---
 apiVersion: apps/v1
@@ -95,3 +96,4 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
