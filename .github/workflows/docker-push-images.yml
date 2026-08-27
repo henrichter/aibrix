@@ -53,7 +53,6 @@ jobs:
             aibrix/${{ matrix.component.name }}:nightly
 
   build-push-ghcr:
-    if: github.repository == 'vllm-project/aibrix'
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -83,7 +82,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.AIBRIX_ORG_PACKAGE_UPDATE_GITHUB_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
       - name: Set up QEMU
@@ -96,5 +95,5 @@ jobs:
           file: ${{ matrix.component.file }}
           push: true
           tags: |
-            ghcr.io/aibrix/${{ matrix.component.name }}:${{ github.sha }}
-            ghcr.io/aibrix/${{ matrix.component.name }}:nightly
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.component.name }}:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.component.name }}:nightly
