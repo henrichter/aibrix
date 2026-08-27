@@ -73,6 +73,10 @@ spec:
         - name: gateway-plugin
           image: {{ .Values.gatewayPlugin.container.image.repository }}:{{ .Values.gatewayPlugin.container.image.tag }}
           imagePullPolicy: {{ .Values.gatewayPlugin.container.image.imagePullPolicy | default "IfNotPresent" }}
+          {{- with .Values.gatewayPlugin.container.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - name: gateway
               containerPort: 50052

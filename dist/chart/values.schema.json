@@ -76,6 +76,13 @@
             "probes": {
               "$ref": "#/$defs/probeConfiguration"
             },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Extra container args passed to the gateway-plugins binary (e.g. [\"-v=4\"])"
+            },
             "envs": {
               "type": "object",
               "patternProperties": {

@@ -82,6 +82,7 @@ gatewayPlugin:
         periodSeconds: 10
         timeoutSeconds: 3
         failureThreshold: 3
+    args: []
     envs:
       AIBRIX_POD_METRIC_REFRESH_INTERVAL_MS: "50"
       AIBRIX_PREFIX_CACHE_TOKENIZER_TYPE: "character"
