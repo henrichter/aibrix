@@ -54,10 +54,10 @@ func TestLeastGpuCache(t *testing.T) {
 				}),
 			},
 			podModelMetrics: map[string]map[string]metrics.MetricValue{
-				"p1": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
-				"p2": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.2}},
-				"p3": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.3}},
-				"p4": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.4}},
+				"p1": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
+				"p2": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.2}},
+				"p3": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.3}},
+				"p4": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.4}},
 			},
 			expectErr:  false,
 			expectMsgs: []string{"1.1.1.1:8000"},
@@ -82,9 +82,9 @@ func TestLeastGpuCache(t *testing.T) {
 				}),
 			},
 			podModelMetrics: map[string]map[string]metrics.MetricValue{
-				"p1": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
-				"p2": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.5}},
-				"p3": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
+				"p1": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
+				"p2": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.5}},
+				"p3": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
 			},
 			expectErr:  false,
 			expectMsgs: []string{"1.1.1.1:8000", "3.3.3.3:8000"},
@@ -100,7 +100,7 @@ func TestLeastGpuCache(t *testing.T) {
 				}),
 			},
 			podModelMetrics: map[string]map[string]metrics.MetricValue{
-				"p1": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
+				"p1": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
 			},
 			expectErr:  false,
 			expectMsgs: []string{"1.1.1.1:8000"},
@@ -159,8 +159,8 @@ func TestLeastGpuCache_ScoreAll(t *testing.T) {
 		[]*v1.Pod{podA, podB},
 		"m1",
 		map[string]map[string]metrics.MetricValue{
-			"pA": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
-			"pB": {metrics.GPUCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.8}},
+			"pA": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.1}},
+			"pB": {metrics.KVCacheUsagePerc: &metrics.SimpleMetricValue{Value: 0.8}},
 		})
 
 	r := leastGpuCacheRouter{cache: c}

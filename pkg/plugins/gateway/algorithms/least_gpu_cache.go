@@ -49,22 +49,22 @@ func NewLeastGpuCacheRouter() (types.Router, error) {
 	}, nil
 }
 
-// ScoreAll fetches the GPU cache usage percentage for all ready pods in a single batch operation.
-// This enables the multi-strategy aggregator to penalize or reward pods based on their available GPU cache capacity.
+// ScoreAll fetches the KV cache usage percentage for all ready pods in a single batch operation.
+// This enables the multi-strategy aggregator to penalize or reward pods based on their available KV cache capacity.
 func (r leastGpuCacheRouter) ScoreAll(ctx *types.RoutingContext, readyPodList types.PodList) ([]float64, []bool, error) {
 	pods := readyPodList.All()
 	scores := make([]float64, len(pods))
 	scored := make([]bool, len(pods))
 
 	for i, pod := range pods {
-		metricVal, err := r.cache.GetMetricValueByPodModel(pod.Name, pod.Namespace, ctx.Model, metrics.GPUCacheUsagePerc)
+		metricVal, err := r.cache.GetMetricValueByPodModel(pod.Name, pod.Namespace, ctx.Model, metrics.KVCacheUsagePerc)
 		if err != nil {
 			klog.V(4).ErrorS(err, "failed to get metrics for pod")
 			continue
 		}
 		scores[i] = metricVal.GetSimpleValue()
 		scored[i] = true
-		klog.V(4).Infof("pod: %v, podIP: %v, gpu cache: %v", pod.Name, pod.Status.PodIP, scores[i])
+		klog.V(4).Infof("pod: %v, podIP: %v, kv cache: %v", pod.Name, pod.Status.PodIP, scores[i])
 	}
 
 	return scores, scored, nil
@@ -81,15 +81,15 @@ func (r leastGpuCacheRouter) Route(ctx *types.RoutingContext, readyPodList types
 	var candidatePods []*v1.Pod
 
 	for _, pod := range readyPodList.All() {
-		gpuCache, err := r.cache.GetMetricValueByPodModel(pod.Name, pod.Namespace, ctx.Model, metrics.GPUCacheUsagePerc)
+		kvCacheUsage, err := r.cache.GetMetricValueByPodModel(pod.Name, pod.Namespace, ctx.Model, metrics.KVCacheUsagePerc)
 		if err != nil {
 			klog.Error(err)
 			continue
 		}
-		totalCache := gpuCache.GetSimpleValue()
+		totalCache := kvCacheUsage.GetSimpleValue()
 
-		klog.V(4).Infof("pod: %v, podIP: %v, gpuCache: %v",
-			pod.Name, pod.Status.PodIP, gpuCache.GetSimpleValue())
+		klog.V(4).Infof("pod: %v, podIP: %v, kvCache: %v",
+			pod.Name, pod.Status.PodIP, kvCacheUsage.GetSimpleValue())
 
 		if totalCache < minGpuCache {
 			minGpuCache = totalCache
@@ -112,7 +112,7 @@ func (r leastGpuCacheRouter) Route(ctx *types.RoutingContext, readyPodList types
 		}
 		klog.V(4).Infof("select targetPod: %s(%s)", targetPod.Name, targetPod.Status.PodIP)
 	} else {
-		klog.V(4).Infof("select targetPod: %s(%s) gpuCache: %v", targetPod.Name, targetPod.Status.PodIP, minGpuCache)
+		klog.V(4).Infof("select targetPod: %s(%s) kvCache: %v", targetPod.Name, targetPod.Status.PodIP, minGpuCache)
 	}
 
 	if targetPod == nil {
